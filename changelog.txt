@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 2025-07-21
+  Features:
+    - Added ability to hotswap between variations in the GUI
+    - Added ability to hotswap between variations by shift left/right click
+    - Added compatability with Lane Filtered Loaders to use the same host GUI element if both mods are enabled
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 2025-06-20
   Info:
