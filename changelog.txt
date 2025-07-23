@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+Date: 2025-07-23
+  Features:
+    - Added a mod setting to decide if newly placed loaders should be in always stack mode
+  Changes:
+    - Added a hidden dependency on lane filtered loaders to preserve load order
+  Bugfixes:
+    - Fixed a crash when used in conjunction with Stacking Loaders
+    - Fixed a crash when copy/pasting settings from the wrong entities
+    - Fixed loaders losing their filters when their stacking mode is changed
+---------------------------------------------------------------------------------------------------
 Version: 1.0.1
 Date: 2025-07-21
   Features:

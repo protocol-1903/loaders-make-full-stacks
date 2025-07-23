@@ -33,6 +33,12 @@ local function replace(old_entity, player)
   local red_connections = {}
   local green_connections = {}
   local fluid
+  local filters = {}
+
+  -- save filters
+  for i=1, old_entity.filter_slot_count do
+    filters[i] = old_entity.get_filter(i)
+  end
 
   for _, connection in pairs(old_entity.get_wire_connector(defines.wire_connector_id.circuit_red, true).connections) do
     red_connections[#red_connections+1] = connection.target
@@ -71,12 +77,15 @@ local function replace(old_entity, player)
   end
 
   -- update stack size if appliccable
-  if stack then
+  if stack and new_entity.prototype.loader_adjustable_belt_stack_size then
     new_entity.loader_belt_stack_size_override = stack
   end
 
   -- set filter(s) and circuit controls
   if mode then new_entity.loader_filter_mode = mode end
+  for i, filter in pairs(filters) do
+    new_entity.set_filter(i, filter)
+  end
   if control_data then
     local new_control = new_entity.get_or_create_control_behavior()
 
@@ -102,13 +111,28 @@ local function replace(old_entity, player)
   if swap_gui then
     player.opened = new_entity
   end
+
+  return new_entity
 end
+
+remote.add_interface("loaders-make-full-stacks",
+  {
+    ["build-check"] = function (entity, player)
+      if player.mod_settings["loaders-stack-by-default"].value then
+        replace(entity, player)
+      end
+    end
+  }
+)
 
 -- copy paste settings, but change the mode if they are different
 script.on_event(defines.events.on_entity_settings_pasted, function (event)
 
   local source = event.source.type == "entity-ghost" and event.source.ghost_prototype or event.source.prototype
   local destination = event.destination.type == "entity-ghost" and event.destination.ghost_prototype or event.destination.prototype
+
+  -- make sure both are valid entities
+  if stacked_loaders[source.name] == nil or stacked_loaders[destination.name] == nil then return end
 
   if stacked_loaders[source.name] ~= stacked_loaders[destination.name] then
     -- two different styles, need to swap the destination to match the source
@@ -124,6 +148,22 @@ script.on_event(defines.events.on_gui_checked_state_changed, function (event)
     replace(game.players[event.player_index].opened, game.players[event.player_index])
   end
 end)
+
+-- only register event if the event filter exists, i.e. another mod hasn't overridden it
+if prototypes.mod_data["loaders-make-full-stacks"].data.build_event_filter then
+  assert(#prototypes.mod_data["loaders-make-full-stacks"].data.build_event_filter ~= 0, "ERROR: data.build_event_filter for loaders-make-full-stacks not found!")
+  script.on_event(defines.events.on_built_entity, function (event)
+    local player = game.players[event.player_index]
+    local entity = event.entity
+    -- if player has setting enabled, then replace with custom
+    if player.mod_settings["loaders-stack-by-default"].value then
+      entity = replace(event.entity, player)
+    end
+    if script.active_mods["lane-filtered-loaders"] then
+      remote.call("lane-filtered-loaders", "build-check", entity, player)
+    end
+  end, prototypes.mod_data["loaders-make-full-stacks"].data.build_event_filter)
+end
 
 -- only create GUI if lane-filtered-loaders is not enabled
 if script.active_mods["lane-filtered-loaders"] then

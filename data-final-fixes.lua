@@ -1,11 +1,11 @@
+local alt_loaders, stacked_loaders, build_event_filter = {}, {}, {}
+
 -- required to load SA for whatever reason
 if not data.raw.tile["empty-space"] then
   local empty_space = table.deepcopy(data.raw.tile["out-of-map"])
   empty_space.name = "empty-space"
   data:extend{empty_space}
 end
-
-local alt_loaders, stacked_loaders = {}, {}
 
 -- update util constant for max stack size
 data.raw["utility-constants"]["default"].max_belt_stack_size = 
@@ -27,6 +27,7 @@ for _, prototype in pairs{
         new.localised_name = loader.localised_name or { "entity-name." .. loader.name }
         new.localised_description = loader.localised_description or { "entity-description." .. loader.name }
         new.placeable_by = new.placeable_by or data.raw.item[loader.name] and { item = loader.name, count = 1 }
+        new.adjustable_belt_stack_size = false -- crashes when attempting to modify, so just set to false
         new.wait_for_full_stack = true
         new.factoriopedia_alternative = loader.name
         new.hidden_in_factoriopedia = true
@@ -37,6 +38,10 @@ for _, prototype in pairs{
         stacked_loaders[new.name] = true
         alt_loaders[loader.name] = new.name
         alt_loaders[new.name] = loader.name
+        build_event_filter[#build_event_filter+1] = {filter = "name", name = loader.name}
+        build_event_filter[#build_event_filter+1] = {filter = "ghost_name", name = loader.name}
+        build_event_filter[#build_event_filter+1] = {filter = "name", name = new.name}
+        build_event_filter[#build_event_filter+1] = {filter = "ghost_name", name = new.name}
       elseif mods["aai-loaders"] and loader.name:sub(1, 4) == "aai-" then
         -- make loader using aai bcause i need it to 
         local aai_data = AAILoaders.make_tier{
@@ -62,6 +67,7 @@ for _, prototype in pairs{
         aai_data.loader.filter_count = loader.filter_count
         aai_data.loader.per_lane_filters = loader.per_lane_filters
         aai_data.loader.max_belt_stack_size = (loader.max_belt_stack_size or 0) > 1 and loader.max_belt_stack_size or data.raw["utility-constants"]["default"].max_belt_stack_size
+        aai_data.loader.adjustable_belt_stack_size = false -- crashes when attempting to modify, so just set to false
         aai_data.loader.wait_for_full_stack = true
         aai_data.loader.factoriopedia_alternative = loader.name
         aai_data.loader.hidden_in_factoriopedia = true
@@ -79,6 +85,10 @@ for _, prototype in pairs{
         stacked_loaders[aai_data.loader.name] = true
         alt_loaders[loader.name] = aai_data.loader.name
         alt_loaders[aai_data.loader.name] = loader.name
+      build_event_filter[#build_event_filter+1] = {filter = "name", name = loader.name}
+      build_event_filter[#build_event_filter+1] = {filter = "ghost_name", name = loader.name}
+      build_event_filter[#build_event_filter+1] = {filter = "name", name = aai_data.loader.name}
+      build_event_filter[#build_event_filter+1] = {filter = "ghost_name", name = aai_data.loader.name}
       end
     end
   end
@@ -89,7 +99,8 @@ data:extend{{
   name = "loaders-make-full-stacks",
   data = {
     alt_loaders = alt_loaders,
-    stacked_loaders = stacked_loaders
+    stacked_loaders = stacked_loaders,
+    build_event_filter = build_event_filter
   },
   hidden_in_factoriopedia = true,
   hidden = true
@@ -115,4 +126,5 @@ if mods["lane-filtered-loaders"] then
   end
   data.raw["mod-data"]["lane-filtered-loaders"].data.lane_filtered_loaders = lane_filtered_loaders
   data.raw["mod-data"]["lane-filtered-loaders"].data.alt_loaders = alt_lane_loaders
+  data.raw["mod-data"]["lane-filtered-loaders"].data.build_event_filter = nil
 end
