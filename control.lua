@@ -174,7 +174,6 @@ if script.active_mods["lane-filtered-loaders"] then
 
     -- if loader opened, extend gui
     if entity == "loader" or entity == "loader-1x1" then
-      log(serpent.block(stacked_loaders))
       game.players[event.player_index].gui.relative["lfl-frame"]["inner-frame"].add{
         type = "checkbox",
         name = "checkbox-stack",
