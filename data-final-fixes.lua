@@ -27,7 +27,6 @@ for _, prototype in pairs{
         new.localised_name = loader.localised_name or { "entity-name." .. loader.name }
         new.localised_description = loader.localised_description or { "entity-description." .. loader.name }
         new.placeable_by = new.placeable_by or data.raw.item[loader.name] and { item = loader.name, count = 1 }
-        new.adjustable_belt_stack_size = false -- crashes when attempting to modify, so just set to false
         new.wait_for_full_stack = true
         new.factoriopedia_alternative = loader.name
         new.hidden_in_factoriopedia = true
@@ -67,7 +66,7 @@ for _, prototype in pairs{
         aai_data.loader.filter_count = loader.filter_count
         aai_data.loader.per_lane_filters = loader.per_lane_filters
         aai_data.loader.max_belt_stack_size = (loader.max_belt_stack_size or 0) > 1 and loader.max_belt_stack_size or data.raw["utility-constants"]["default"].max_belt_stack_size
-        aai_data.loader.adjustable_belt_stack_size = false -- crashes when attempting to modify, so just set to false
+        aai_data.loader.adjustable_belt_stack_size = loader.adjustable_belt_stack_size
         aai_data.loader.wait_for_full_stack = true
         aai_data.loader.factoriopedia_alternative = loader.name
         aai_data.loader.hidden_in_factoriopedia = true
