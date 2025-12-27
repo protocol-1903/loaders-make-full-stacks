@@ -1,6 +1,6 @@
 {
   "name": "loaders-make-full-stacks",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "title": "Loaders make full stacks",
   "author": "protocol_1903",
   "homepage": "https://discord.gg/K3fXMGVc4z",
@@ -8,6 +8,7 @@
   "factorio_version": "2.0",
   "dependencies": [
     "base >= 2.0.58",
+    "(?) more-quality-scaling",
     "(?) lane-filtered-loaders",
     "(?) stacking-loaders"
   ],
