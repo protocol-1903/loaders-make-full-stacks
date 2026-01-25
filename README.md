@@ -1,5 +1,7 @@
 [![ko-fi](https://img.shields.io/badge/Ko--fi-Donate%20-hotpink?logo=kofi&logoColor=white&style=for-the-badge)](https://ko-fi.com/protocol1903) [![](https://img.shields.io/badge/Discord-Community-blue?style=for-the-badge)](https://discord.gg/K3fXMGVc4z)
 
+# THIS MOD HAS BEEN DEPRECIATED. PLEASE USE [LOADER UTILS](https://mods.factorio.com/mod/loader-utils)
+
 Supports [Infinite Belt Stacking](https://mods.factorio.com/mod/infinite-belt-stacking)
 
 Highly recommendede to be used alongside [Stacking Loaders](https://mods.factorio.com/mod/stacking-loaders) and [Lane Filtered Loaders](https://mods.factorio.com/mod/lane-filtered-loaders)

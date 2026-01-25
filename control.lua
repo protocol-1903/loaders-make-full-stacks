@@ -2,6 +2,11 @@ assert(prototypes.mod_data["loaders-make-full-stacks"], "ERROR: mod-data for loa
 local alt_loaders = assert(prototypes.mod_data["loaders-make-full-stacks"].data.alt_loaders, "ERROR: data.alt_loaders for loaders-make-full-stacks not found!")
 local stacked_loaders = assert(prototypes.mod_data["loaders-make-full-stacks"].data.stacked_loaders, "ERROR: data.stacked_loaders for loaders-make-full-stacks not found!")
 
+script.on_event(defines.events.on_tick, function()
+  game.print("The mod Loaders Make Full Stacks has been depreciated. Please migrate to Loader Utils for a better and more up-to-date experience.\nhttps://mods.factorio.com/mod/loader-utils")
+  script.on_event(defines.events.on_tick)
+end)
+
 local function replace(old_entity, player)
   -- swap open the new loader gui if the old loader gui is opened
   local swap_gui = player and player.opened == old_entity
